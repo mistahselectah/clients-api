@@ -1,4 +1,4 @@
-import { EUserRole } from '@common/enum';
+import { ERole } from '@common/enum';
 import { IUserIdentity } from '@common/interfaces';
 import {
   CanActivate,
@@ -12,7 +12,7 @@ export class AdminGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const identity: IUserIdentity = request.identity;
-    return identity && identity.role === EUserRole.ADMIN;
+    const identity: IUserIdentity = request.user;
+    return identity && identity.role === ERole.ADMIN;
   }
 }

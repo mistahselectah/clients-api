@@ -36,9 +36,10 @@
     "class-validator": "^0.14.1",
     "dotenv": "^16.4.5",
     "env-var": "^7.5.0",
+    "nestjs-rbac": "^1.10.0",
     "passport-jwt": "^4.0.1",
     "pg": "^8.13.1",
-    "reflect-metadata": "^0.2.0",
+    "reflect-metadata": "0.1.13",
     "rxjs": "^7.8.1",
     "typeorm": "^0.3.20"
   },

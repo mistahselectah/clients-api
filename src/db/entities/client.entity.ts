@@ -1,7 +1,7 @@
 import { NumericColumnTransformer } from '@common/utils/numeric-column-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { EUserRole } from '../../common/enum';
+import { ERole } from '../../common/enum';
 
 @Entity('clients')
 export class ClientEntity extends BaseEntity {
@@ -26,10 +26,10 @@ export class ClientEntity extends BaseEntity {
   @Column('enum', {
     name: 'role',
     enumName: 'UserRole',
-    enum: EUserRole,
-    default: EUserRole.USER,
+    enum: ERole,
+    default: ERole.USER,
   })
-  role: EUserRole;
+  role: ERole;
 
   @ApiProperty({ description: 'Пароль клиента' })
   @Column({ default: 'user' })

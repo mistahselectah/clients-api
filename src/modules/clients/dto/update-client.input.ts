@@ -1,4 +1,4 @@
-import { EUserRole } from '@common/enum';
+import { ERole } from '@common/enum';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsEnum, IsNumber, IsOptional, IsString, Min, MinLength } from 'class-validator';
 
@@ -21,7 +21,7 @@ export class UpdateClientInput {
   name?: string;
 
   @ApiProperty({ description: 'Роль клиента', required: false })
-  @IsEnum(EUserRole)
+  @IsEnum(ERole)
   @IsOptional()
   role?: string;
 

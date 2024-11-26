@@ -1,4 +1,4 @@
-import { EUserRole } from '@common/enum';
+import { ERole } from '@common/enum';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsEnum, IsNumber, IsString, Min, MinLength } from 'class-validator';
 
@@ -18,7 +18,7 @@ export class CreateClientInput {
   name: string;
 
   @ApiProperty({ description: 'Роль клиента' })
-  @IsEnum(EUserRole)
+  @IsEnum(ERole)
   role: string;
 
   @ApiProperty({ description: 'Пароль клиента' })

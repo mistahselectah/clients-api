@@ -1,4 +1,4 @@
-import { BAD_REQUEST_ERROR } from '@common/constants';
+import { BAD_REQUEST_ERROR, FORBIDDEN_ERROR } from '@common/constants';
 import { ClientEntity } from '@entities/client.entity';
 import { JwtAuthGuard } from '@modules/auth/guards/jwt-auth.guard';
 import { ClientOutput } from '@modules/clients/dto/client.output';
@@ -26,6 +26,7 @@ import {
   ApiOperation, ApiParam,
   ApiTags, ApiUnauthorizedResponse
 } from '@nestjs/swagger';
+import { RBAcGuard, RBAcPermissions } from 'nestjs-rbac';
 import { IsEntityExistsPipe } from '../../pipes/is-entity-exists.pipe';
 import { ClientsService } from './clients.service';
 
@@ -40,6 +41,7 @@ export class ClientsController {
   @ApiUnauthorizedResponse()
   @ApiInternalServerErrorResponse()
   @UseGuards(JwtAuthGuard)
+  @RBAcPermissions('clients', 'clients@CREATE')
   @Get()
   async getClients(): Promise<ClientOutput[]> {
     return this.clientsService.getClients();
@@ -84,9 +86,11 @@ export class ClientsController {
   @ApiNoContentResponse()
   @ApiNotFoundResponse()
   @ApiUnauthorizedResponse()
-  @ApiForbiddenResponse()
+  @ApiForbiddenResponse({example: FORBIDDEN_ERROR})
   @ApiInternalServerErrorResponse()
-  @UseGuards(JwtAuthGuard)
+  @RBAcPermissions('clients', 'clients@DELETE')
+  @UseGuards(JwtAuthGuard, RBAcGuard)
+  @UseGuards()
   @Delete(':id')
   @HttpCode(204)
   async deleteClient(@Param('id', ParseUUIDPipe, IsEntityExistsPipe(ClientEntity)) id: string): Promise<void> {

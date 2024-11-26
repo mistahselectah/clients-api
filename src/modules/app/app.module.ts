@@ -1,8 +1,10 @@
+import { RBAC } from '@common/constants';
 import { ClientEntity } from '@entities/client.entity';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ClientsModule } from '@modules/clients/clients.module';
 import { AuthModule } from '@modules/auth/auth.module';
+import { RBAcModule } from 'nestjs-rbac';
 
 @Module({
   imports: [
@@ -14,8 +16,9 @@ import { AuthModule } from '@modules/auth/auth.module';
       password: 'sa',
       database: 'sa',
       entities: [ClientEntity],
-      logging: true
+      // logging: true
     }),
+    RBAcModule.forRoot(RBAC),
     AuthModule,
     ClientsModule
   ],
