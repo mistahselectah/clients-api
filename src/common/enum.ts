@@ -3,7 +3,11 @@ export enum ERole {
   USER = 'USER',
 }
 
-export enum EClientsPermissions {
+export enum EResource {
+  CLIENTS = 'CLIENTS'
+}
+
+export enum EAction {
   CREATE = 'CREATE',
   UPDATE = 'UPDATE',
   LIST = 'LIST',

@@ -1,5 +1,10 @@
 import { IFilterPermission } from 'nestjs-rbac';
 
+export interface IExceptionResponse {
+  message: string | string[];
+  statusCode: number;
+}
+
 export interface IUserIdentity {
   id: string;
   role: string;

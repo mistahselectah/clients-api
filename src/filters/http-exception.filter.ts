@@ -1,3 +1,4 @@
+import { IExceptionResponse } from '@common/interfaces';
 import {
   ArgumentsHost,
   Catch,
@@ -6,11 +7,6 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { type Response } from 'express';
-
-interface IExceptionResponse {
-  message: string | string[];
-  statusCode: number;
-}
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -27,7 +23,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const exceptionResponse = exception.getResponse() as IExceptionResponse;
 
     if (exceptionResponse.message instanceof Array) {
-      message += `: ${exceptionResponse.message.join(',')}.`;
+      message += `: ${exceptionResponse.message.join(', ')}.`;
     }
 
     response.status(status).json({

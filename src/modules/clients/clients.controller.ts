@@ -1,4 +1,5 @@
 import { BAD_REQUEST_ERROR, FORBIDDEN_ERROR } from '@common/constants';
+import { EAction, EResource } from '@common/enum';
 import { ClientEntity } from '@entities/client.entity';
 import { JwtAuthGuard } from '@modules/auth/guards/jwt-auth.guard';
 import { ClientOutput } from '@modules/clients/dto/client.output';
@@ -26,11 +27,12 @@ import {
   ApiOperation, ApiParam,
   ApiTags, ApiUnauthorizedResponse
 } from '@nestjs/swagger';
-import { RBAcGuard, RBAcPermissions } from 'nestjs-rbac';
+import { RBAC_REQUEST_FILTER, RBAcGuard, RBAcPermissions } from 'nestjs-rbac';
 import { IsEntityExistsPipe } from '../../pipes/is-entity-exists.pipe';
 import { ClientsService } from './clients.service';
 
 @ApiTags('Клиенты')
+@UseGuards(JwtAuthGuard, RBAcGuard)
 @Controller('clients')
 export class ClientsController {
   constructor(private readonly clientsService: ClientsService) {}
@@ -39,9 +41,10 @@ export class ClientsController {
   @ApiBearerAuth()
   @ApiOkResponse({ type: [ClientOutput] })
   @ApiUnauthorizedResponse()
+  @ApiForbiddenResponse({example: FORBIDDEN_ERROR})
   @ApiInternalServerErrorResponse()
-  @UseGuards(JwtAuthGuard)
-  @RBAcPermissions('clients', 'clients@CREATE')
+  @RBAcPermissions(`${EResource.CLIENTS}@${EAction.LIST}`)
+  @UseGuards(RBAcGuard)
   @Get()
   async getClients(): Promise<ClientOutput[]> {
     return this.clientsService.getClients();
@@ -52,27 +55,26 @@ export class ClientsController {
   @ApiBody({type: CreateClientInput})
   @ApiCreatedResponse({ type: ClientOutput })
   @ApiUnauthorizedResponse()
-  @ApiForbiddenResponse()
+  @ApiForbiddenResponse({example: FORBIDDEN_ERROR})
   @ApiBadRequestResponse({example: BAD_REQUEST_ERROR})
   @ApiInternalServerErrorResponse()
-  @UseGuards(JwtAuthGuard)
+  @RBAcPermissions(`${EResource.CLIENTS}@${EAction.CREATE}`)
   @Post()
   async createClient(@Body(ValidationPipe) body: CreateClientInput): Promise<ClientOutput> {
     return this.clientsService.createClient(body);
   }
 
-  @ApiOperation({ summary: 'Обновить данные пользователя' })
+  @ApiOperation({ summary: 'Изменить данные пользователя' })
   @ApiBearerAuth()
   @ApiBody({type: UpdateClientInput})
   @ApiParam({name: 'id', type: String})
   @ApiOkResponse({type: ClientOutput})
   @ApiUnauthorizedResponse()
-  @ApiForbiddenResponse()
+  @ApiForbiddenResponse({example: FORBIDDEN_ERROR})
   @ApiBadRequestResponse({example: BAD_REQUEST_ERROR})
   @ApiInternalServerErrorResponse()
-  @UseGuards(JwtAuthGuard)
+  @RBAcPermissions(`${EResource.CLIENTS}@${RBAC_REQUEST_FILTER}`)
   @Put(':id')
-  @HttpCode(200)
   async updateClient(
     @Param('id', ParseUUIDPipe, IsEntityExistsPipe(ClientEntity)) id: string,
     @Body(ValidationPipe) body: UpdateClientInput
@@ -88,9 +90,7 @@ export class ClientsController {
   @ApiUnauthorizedResponse()
   @ApiForbiddenResponse({example: FORBIDDEN_ERROR})
   @ApiInternalServerErrorResponse()
-  @RBAcPermissions('clients', 'clients@DELETE')
-  @UseGuards(JwtAuthGuard, RBAcGuard)
-  @UseGuards()
+  @RBAcPermissions(`${EResource.CLIENTS}@${EAction.DELETE}`)
   @Delete(':id')
   @HttpCode(204)
   async deleteClient(@Param('id', ParseUUIDPipe, IsEntityExistsPipe(ClientEntity)) id: string): Promise<void> {
@@ -101,8 +101,9 @@ export class ClientsController {
   @ApiBearerAuth()
   @ApiOkResponse({ type: TotalAmountOutput })
   @ApiUnauthorizedResponse()
+  @ApiForbiddenResponse({example: FORBIDDEN_ERROR})
   @ApiInternalServerErrorResponse()
-  @UseGuards(JwtAuthGuard)
+  @RBAcPermissions(`${EResource.CLIENTS}@${EAction.GET_TOTAL_AMOUNT}`)
   @Get('total-amount')
   async getTotalAmount(): Promise<TotalAmountOutput> {
     return this.clientsService.getTotalAmount();
