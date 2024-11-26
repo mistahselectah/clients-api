@@ -19,6 +19,7 @@ export const RBAC: IStorageRbac = {
       `&${ERole.USER}`,
       `${EResource.CLIENTS}@${EAction.LIST}`,
       `${EResource.CLIENTS}@${EAction.GET_TOTAL_AMOUNT}`,
+      `${EResource.CLIENTS}@${EAction.UPDATE}`,
       `${EResource.CLIENTS}@${EAction.DELETE}`,
     ],
     [ERole.USER]: [

@@ -7,6 +7,7 @@ export class UpdateUserFilter implements IFilterPermission {
   can(params?: any[]): boolean {
     const request: Request = params[0];
     const user = request.user as IUserIdentity;
+    // TODO Regex
     return user.role === ERole.ADMIN || request.url.includes(user.id);
   }
 }

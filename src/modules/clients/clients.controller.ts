@@ -1,7 +1,13 @@
-import { BAD_REQUEST_ERROR, FORBIDDEN_ERROR } from '@common/constants';
+import {
+  BAD_REQUEST_ERROR,
+  FORBIDDEN_ERROR,
+  INTERNAL_SERVER_ERROR,
+  NOT_FOUND_ERROR,
+  UNAUTHORIZED_ERROR
+} from '@common/constants';
 import { EAction, EResource } from '@common/enum';
 import { ClientEntity } from '@entities/client.entity';
-import { JwtAuthGuard } from '@modules/auth/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '@modules/auth/jwt-auth.guard';
 import { ClientOutput } from '@modules/clients/dto/client.output';
 import { CreateClientInput } from '@modules/clients/dto/create-client.input';
 import { TotalAmountOutput } from '@modules/clients/dto/total-amount.output';
@@ -28,6 +34,7 @@ import {
   ApiTags, ApiUnauthorizedResponse
 } from '@nestjs/swagger';
 import { RBAC_REQUEST_FILTER, RBAcGuard, RBAcPermissions } from 'nestjs-rbac';
+import { IsEmailNotTakenPipe } from '../../pipes/is-email-not-taken.pipe';
 import { IsEntityExistsPipe } from '../../pipes/is-entity-exists.pipe';
 import { ClientsService } from './clients.service';
 
@@ -40,9 +47,9 @@ export class ClientsController {
   @ApiOperation({ summary: 'Получить список пользователей' })
   @ApiBearerAuth()
   @ApiOkResponse({ type: [ClientOutput] })
-  @ApiUnauthorizedResponse()
+  @ApiUnauthorizedResponse({example: UNAUTHORIZED_ERROR})
   @ApiForbiddenResponse({example: FORBIDDEN_ERROR})
-  @ApiInternalServerErrorResponse()
+  @ApiInternalServerErrorResponse({example: INTERNAL_SERVER_ERROR})
   @RBAcPermissions(`${EResource.CLIENTS}@${EAction.LIST}`)
   @UseGuards(RBAcGuard)
   @Get()
@@ -54,13 +61,13 @@ export class ClientsController {
   @ApiBearerAuth()
   @ApiBody({type: CreateClientInput})
   @ApiCreatedResponse({ type: ClientOutput })
-  @ApiUnauthorizedResponse()
+  @ApiUnauthorizedResponse({example: UNAUTHORIZED_ERROR})
   @ApiForbiddenResponse({example: FORBIDDEN_ERROR})
   @ApiBadRequestResponse({example: BAD_REQUEST_ERROR})
-  @ApiInternalServerErrorResponse()
+  @ApiInternalServerErrorResponse({example: INTERNAL_SERVER_ERROR})
   @RBAcPermissions(`${EResource.CLIENTS}@${EAction.CREATE}`)
   @Post()
-  async createClient(@Body(ValidationPipe) body: CreateClientInput): Promise<ClientOutput> {
+  async createClient(@Body(ValidationPipe, IsEmailNotTakenPipe) body: CreateClientInput): Promise<ClientOutput> {
     return this.clientsService.createClient(body);
   }
 
@@ -69,12 +76,14 @@ export class ClientsController {
   @ApiBody({type: UpdateClientInput})
   @ApiParam({name: 'id', type: String})
   @ApiOkResponse({type: ClientOutput})
-  @ApiUnauthorizedResponse()
+  @ApiUnauthorizedResponse({example: UNAUTHORIZED_ERROR})
   @ApiForbiddenResponse({example: FORBIDDEN_ERROR})
   @ApiBadRequestResponse({example: BAD_REQUEST_ERROR})
-  @ApiInternalServerErrorResponse()
+  @ApiNotFoundResponse({example: NOT_FOUND_ERROR})
+  @ApiInternalServerErrorResponse({example: INTERNAL_SERVER_ERROR})
   @RBAcPermissions(`${EResource.CLIENTS}@${RBAC_REQUEST_FILTER}`)
   @Put(':id')
+  @HttpCode(200)
   async updateClient(
     @Param('id', ParseUUIDPipe, IsEntityExistsPipe(ClientEntity)) id: string,
     @Body(ValidationPipe) body: UpdateClientInput
@@ -86,10 +95,10 @@ export class ClientsController {
   @ApiBearerAuth()
   @ApiParam({name: 'id', type: String})
   @ApiNoContentResponse()
-  @ApiNotFoundResponse()
-  @ApiUnauthorizedResponse()
+  @ApiNotFoundResponse({example: NOT_FOUND_ERROR})
+  @ApiUnauthorizedResponse({example: UNAUTHORIZED_ERROR})
   @ApiForbiddenResponse({example: FORBIDDEN_ERROR})
-  @ApiInternalServerErrorResponse()
+  @ApiInternalServerErrorResponse({example: INTERNAL_SERVER_ERROR})
   @RBAcPermissions(`${EResource.CLIENTS}@${EAction.DELETE}`)
   @Delete(':id')
   @HttpCode(204)
@@ -100,9 +109,9 @@ export class ClientsController {
   @ApiOperation({ summary: 'Получить сумму всех счетов пользователей' })
   @ApiBearerAuth()
   @ApiOkResponse({ type: TotalAmountOutput })
-  @ApiUnauthorizedResponse()
+  @ApiUnauthorizedResponse({example: UNAUTHORIZED_ERROR})
   @ApiForbiddenResponse({example: FORBIDDEN_ERROR})
-  @ApiInternalServerErrorResponse()
+  @ApiInternalServerErrorResponse({example: INTERNAL_SERVER_ERROR})
   @RBAcPermissions(`${EResource.CLIENTS}@${EAction.GET_TOTAL_AMOUNT}`)
   @Get('total-amount')
   async getTotalAmount(): Promise<TotalAmountOutput> {

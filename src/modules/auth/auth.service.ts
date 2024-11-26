@@ -22,11 +22,8 @@ export class AuthService {
       throw new UnauthorizedException();
     }
     const { id, role } = user;
-    const token = this.jwtService.sign({ id, role });
-
     return {
-      role,
-      token
+      token: this.jwtService.sign({ id, role })
     }
   }
 

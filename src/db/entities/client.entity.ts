@@ -1,7 +1,7 @@
-import { NumericColumnTransformer } from '@common/utils/numeric-column-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { ERole } from '../../common/enum';
+import { NumericColumnTransformer } from '../../common/utils/numeric-column-transformer';
 
 @Entity('clients')
 export class ClientEntity extends BaseEntity {
@@ -15,7 +15,7 @@ export class ClientEntity extends BaseEntity {
   amount: number;
 
   @ApiProperty({ description: 'Email клиента' })
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @ApiProperty({ description: 'Имя клиента' })
