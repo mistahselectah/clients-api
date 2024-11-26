@@ -1,13 +1,14 @@
+import { BAD_REQUEST_ERROR } from '@common/constants';
 import { AuthService } from '@modules/auth/auth.service';
 import { LoginInput } from '@modules/auth/dto/login.input';
 import { LoginOutput } from '@modules/auth/dto/login.output';
-import { Body, Controller, Post, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post, ValidationPipe } from '@nestjs/common';
 import {
-  ApiInternalServerErrorResponse,
-  ApiNotFoundResponse,
-  ApiOkResponse,
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiInternalServerErrorResponse, ApiOkResponse,
   ApiOperation,
-  ApiTags
+  ApiTags, ApiUnauthorizedResponse
 } from '@nestjs/swagger';
 
 @ApiTags('Авторизация')
@@ -16,10 +17,13 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @ApiOperation({ summary: 'Авторизация пользователя' })
+  @ApiBody({type: LoginInput})
   @ApiOkResponse({ type: LoginOutput })
-  @ApiNotFoundResponse()
+  @ApiBadRequestResponse({example: BAD_REQUEST_ERROR})
+  @ApiUnauthorizedResponse()
   @ApiInternalServerErrorResponse()
   @Post('login')
+  @HttpCode(200)
   login(@Body(ValidationPipe) body: LoginInput): Promise<LoginOutput> {
     return this.authService.login(body);
   }

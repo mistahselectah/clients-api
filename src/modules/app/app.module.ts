@@ -13,7 +13,8 @@ import { AuthModule } from '@modules/auth/auth.module';
       username: 'sa',
       password: 'sa',
       database: 'sa',
-      entities: [ClientEntity]
+      entities: [ClientEntity],
+      logging: true
     }),
     AuthModule,
     ClientsModule
