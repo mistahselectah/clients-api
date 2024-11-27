@@ -21,10 +21,9 @@ import { RBAC } from '../../rbac/settings';
     }),
     RBAcModule.forRoot(RBAC),
     AuthModule,
-    ClientsModule
+    ClientsModule,
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule {
-}
+export class AppModule {}

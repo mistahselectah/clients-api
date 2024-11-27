@@ -1,6 +1,13 @@
 import { ERole } from '@common/enum';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsEnum, IsNumber, IsString, Min, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsEnum,
+  IsNumber,
+  IsString,
+  Min,
+  MinLength,
+} from 'class-validator';
 
 export class CreateClientInput {
   @ApiProperty({ description: 'Счет клиента' })

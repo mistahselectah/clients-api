@@ -1,6 +1,14 @@
 import { ERole } from '@common/enum';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsEnum, IsNumber, IsOptional, IsString, Min, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Min,
+  MinLength,
+} from 'class-validator';
 
 export class UpdateClientInput {
   @ApiProperty({ description: 'Счет клиента', required: false })

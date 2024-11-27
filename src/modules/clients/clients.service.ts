@@ -9,46 +9,54 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class ClientsService {
-  constructor(@InjectRepository(ClientEntity) private clientsRepo: typeof ClientEntity) {
-  }
+  constructor(
+    @InjectRepository(ClientEntity) private clientsRepo: typeof ClientEntity,
+  ) {}
 
   private mapEntityToOutput(client: ClientEntity): ClientOutput {
-    const {password, ...listItem} = client;
+    const { password, ...listItem } = client;
     return listItem;
   }
 
   async getTotalAmount(): Promise<TotalAmountOutput> {
-    const result =  await this.clientsRepo.createQueryBuilder('clients')
+    const result = await this.clientsRepo
+      .createQueryBuilder('clients')
       .select('sum(clients.amount)', 'totalAmount')
       .execute();
-    return {totalAmount: Number(result[0].totalAmount)};
+    return { totalAmount: Number(result[0].totalAmount) };
   }
 
   async deleteClient(id: string): Promise<void> {
-    await this.clientsRepo.delete({id});
+    await this.clientsRepo.delete({ id });
   }
 
-  async updateClient(id: string, input: UpdateClientInput): Promise<ClientOutput> {
+  async updateClient(
+    id: string,
+    input: UpdateClientInput,
+  ): Promise<ClientOutput> {
     let client, password;
     if (input.password) {
       password = md5(input.password);
-      client =  {id, ...input, password} as ClientEntity;
+      client = { id, ...input, password };
     } else {
-      client =  {id, ...input} as ClientEntity;
+      client = { id, ...input };
     }
-    await this.clientsRepo.update({id}, client);
-    const updatedClient = await this.clientsRepo.findOneBy({id});
+    await this.clientsRepo.update({ id }, client as ClientEntity);
+    const updatedClient = await this.clientsRepo.findOneBy({ id });
     return this.mapEntityToOutput(updatedClient);
   }
 
   async createClient(input: CreateClientInput): Promise<ClientOutput> {
     const password = md5(input.password);
-    const client =  await this.clientsRepo.save({...input, password} as ClientEntity);
+    const client = await this.clientsRepo.save({
+      ...input,
+      password,
+    } as ClientEntity);
     return this.mapEntityToOutput(client);
   }
 
   async getClients(): Promise<ClientOutput[]> {
-    const clients =  await this.clientsRepo.find();
+    const clients = await this.clientsRepo.find();
     return clients.map(this.mapEntityToOutput);
   }
 }

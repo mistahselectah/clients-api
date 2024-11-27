@@ -11,7 +11,7 @@ export const RBAC: IStorageRbac = {
       EAction.CREATE,
       EAction.UPDATE,
       EAction.DELETE,
-      RBAC_REQUEST_FILTER
+      RBAC_REQUEST_FILTER,
     ],
   },
   grants: {
@@ -25,7 +25,6 @@ export const RBAC: IStorageRbac = {
     [ERole.USER]: [
       `${EResource.CLIENTS}@${EAction.CREATE}`,
       `${EResource.CLIENTS}@${RBAC_REQUEST_FILTER}`,
-
     ],
   },
   filters: {

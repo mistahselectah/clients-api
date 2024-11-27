@@ -4,7 +4,7 @@ export enum ERole {
 }
 
 export enum EResource {
-  CLIENTS = 'CLIENTS'
+  CLIENTS = 'CLIENTS',
 }
 
 export enum EAction {

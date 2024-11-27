@@ -1,6 +1,6 @@
 import * as dotenv from 'dotenv';
-import {DataSource} from 'typeorm';
-import {MIGRATION_CONFIG} from './migration.config';
+import { DataSource } from 'typeorm';
+import { MIGRATION_CONFIG } from './migration.config';
 dotenv.config();
 
 const config = {
