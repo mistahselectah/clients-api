@@ -1,3 +1,4 @@
+import { ClientEntity } from "../db/entities/client.entity";
 import { TypeOrmModuleOptions } from "@nestjs/typeorm";
 import { get } from "env-var";
 import { PostgresConnectionOptions } from "typeorm/driver/postgres/PostgresConnectionOptions";
@@ -26,6 +27,7 @@ const db: TypeOrmModuleOptions & PostgresConnectionOptions = {
   username: get('POSTGRES_USER').required().asString(),
   password: get('POSTGRES_PASSWORD').required().asString(),
   database: get('POSTGRES_DB').required().asString(),
+  entities: [ClientEntity]
 };
 
 export default (): IConfig => ({

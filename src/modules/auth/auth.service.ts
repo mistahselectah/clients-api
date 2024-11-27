@@ -2,7 +2,7 @@ import { md5 } from '@common/functions';
 import { ClientEntity } from '@entities/client.entity';
 import { LoginInput } from '@modules/auth/dto/login.input';
 import { LoginOutput } from '@modules/auth/dto/login.output';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -10,6 +10,7 @@ import { IUserIdentity } from '@common/interfaces';
 
 @Injectable()
 export class AuthService {
+  private logger = new Logger(AuthService.name);
   constructor(
     private jwtService: JwtService,
     private configService: ConfigService,
@@ -32,8 +33,13 @@ export class AuthService {
   }
 
   async verifyToken(token: string): Promise<IUserIdentity> {
-    return await this.jwtService.verifyAsync(token, {
-      secret: this.configService.get('api').salt,
-    });
+    try {
+      return await this.jwtService.verifyAsync(token, {
+        secret: this.configService.get('api').salt,
+      });
+    } catch (error) {
+       this.logger.error(error.message, error.stack);
+       throw new UnauthorizedException();
+    }
   }
 }

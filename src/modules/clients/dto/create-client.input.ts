@@ -8,11 +8,12 @@ import {
   Min,
   MinLength,
 } from 'class-validator';
+import { MoreThan } from "typeorm";
 
 export class CreateClientInput {
   @ApiProperty({ description: 'Счет клиента' })
   @IsNumber()
-  @Min(1)
+  @MoreThan(0)
   amount: number;
 
   @ApiProperty({ description: 'Email клиента' })
