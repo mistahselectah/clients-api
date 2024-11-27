@@ -1,10 +1,10 @@
 import { ClientEntity } from '@entities/client.entity';
 import { JwtStrategy } from '@modules/auth/jwt-auth.strategy';
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from "@nestjs/config";
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { get } from 'env-var';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 
@@ -12,10 +12,10 @@ import { AuthService } from './auth.service';
   imports: [
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
-      imports: [],
-      inject: [],
-      useFactory: () => ({
-        secret: get('SALT').required().asString(),
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        secret: config.getOrThrow('api').salt,
         signOptions: { expiresIn: '7d' },
       }),
     }),

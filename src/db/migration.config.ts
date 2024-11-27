@@ -1,15 +1,10 @@
 import 'dotenv/config';
-import { get } from "env-var";
 import { DataSource } from 'typeorm';
 import { DataSourceOptions } from 'typeorm/data-source/DataSourceOptions';
+import config from "../config/app.config";
 
 export const MIGRATION_CONFIG = {
-  type: 'postgres',
-  host: get('POSTGRES_HOST').required().asString(),
-  port: get('POSTGRES_PORT').required().asPortNumber(),
-  username: get('POSTGRES_USER').required().asString(),
-  password: get('POSTGRES_PASSWORD').required().asString(),
-  database: get('POSTGRES_DB').required().asString(),
+  ...(config().db),
   entities: ['src/db/entities/*.entity{.ts,.js}'],
   migrations: ['src/db/migrations/*{.ts,.js}'],
   migrationsTableName: 'typeorm_migrations',

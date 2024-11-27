@@ -14,15 +14,8 @@ cd clients-api
 ### Запуск
 ```
 docker-compose up -d
-RUN npm run migration:run
-RUN npm run seed:run
 ```
 
-Приложение доступно по адресу http://localhost:<API_PORT>
+Документация по адресу http://localhost:<API_PORT>
 
-Документация по адресу http://localhost:<API_PORT>/doc
-
-PgAdmin по адресу http://localhost:5050
-
-
-
+PgAdmin по адресу http://localhost:<PGADMIN_PORT>

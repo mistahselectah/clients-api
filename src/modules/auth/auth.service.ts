@@ -3,15 +3,16 @@ import { ClientEntity } from '@entities/client.entity';
 import { LoginInput } from '@modules/auth/dto/login.input';
 import { LoginOutput } from '@modules/auth/dto/login.output';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConfigService } from "@nestjs/config";
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { get } from 'env-var';
 import { IUserIdentity } from '@common/interfaces';
 
 @Injectable()
 export class AuthService {
   constructor(
     private jwtService: JwtService,
+    private configService: ConfigService,
     @InjectRepository(ClientEntity) private clientsRepo: typeof ClientEntity,
   ) {}
 
@@ -32,7 +33,7 @@ export class AuthService {
 
   async verifyToken(token: string): Promise<IUserIdentity> {
     return await this.jwtService.verifyAsync(token, {
-      secret: get('SALT').required().asString(),
+      secret: this.configService.get('api').salt,
     });
   }
 }

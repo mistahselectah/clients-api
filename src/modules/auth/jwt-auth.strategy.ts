@@ -1,16 +1,16 @@
 import { IUserIdentity } from '@common/interfaces';
 import { AuthService } from '@modules/auth/auth.service';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConfigService } from "@nestjs/config";
 import { PassportStrategy } from '@nestjs/passport';
-import { get } from 'env-var';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(private authService: AuthService) {
+  constructor(private configService: ConfigService, private authService: AuthService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: get('SALT').required().asString(),
+      secretOrKey: configService.get('api').salt,
     });
   }
 

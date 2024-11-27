@@ -1,23 +1,22 @@
-import { ClientEntity } from '@entities/client.entity';
+import { AuthModule } from "@modules/auth/auth.module";
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ClientsModule } from '@modules/clients/clients.module';
-import { AuthModule } from '@modules/auth/auth.module';
-import { get } from 'env-var';
 import { RBAcModule } from 'nestjs-rbac';
+import config from "../../config/app.config";
 import { RBAC } from '../../rbac/settings';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: get('POSTGRES_HOST').required().asString(),
-      port: get('POSTGRES_PORT').required().asPortNumber(),
-      username: get('POSTGRES_USER').required().asString(),
-      password: get('POSTGRES_PASSWORD').required().asString(),
-      database: get('POSTGRES_DB').required().asString(),
-      entities: [ClientEntity],
-      // logging: true
+    ConfigModule.forRoot({
+      load: [config],
+      isGlobal: true,
+    }),
+    TypeOrmModule.forRootAsync({
+        imports: [ConfigModule],
+        inject: [ConfigService],
+        useFactory: (configService: ConfigService) => configService.get('db'),
     }),
     RBAcModule.forRoot(RBAC),
     AuthModule,

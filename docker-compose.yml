@@ -34,8 +34,8 @@ services:
     container_name: pgadmin4
     restart: on-failure
     environment:
-      - PGADMIN_DEFAULT_EMAIL=mistahselectah@gmail.com
-      - PGADMIN_DEFAULT_PASSWORD=pgadmin
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
     ports:
       - '${PGADMIN_PORT}:80'
     networks:
