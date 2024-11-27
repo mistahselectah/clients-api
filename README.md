@@ -5,14 +5,11 @@
 - docker-compose v2.28.1
 
 
-### Установка
+### Установка и запуск
 ```
-git clone https://selectah@bitbucket.org/selectah/clients-api.git
+git clone https://github.com/mistahselectah/clients-api.git
 cd clients-api
-```
-
-### Запуск
-```
+cp .env.sample .env
 docker-compose up -d
 ```
 
