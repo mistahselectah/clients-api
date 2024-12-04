@@ -4,17 +4,15 @@ import {
   IsEmail,
   IsEnum,
   IsNumber,
-  IsOptional,
+  IsOptional, IsPositive,
   IsString,
-  Min,
-  MinLength,
-} from 'class-validator';
-import { MoreThan } from "typeorm";
+  MinLength
+} from "class-validator";
 
 export class UpdateClientInput {
   @ApiProperty({ description: 'Счет клиента', required: false })
   @IsNumber()
-  @MoreThan(0)
+  @IsPositive()
   @IsOptional()
   amount?: number;
 

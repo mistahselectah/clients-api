@@ -9,11 +9,11 @@ export class IsEmailNotTakenPipe implements PipeTransform {
     @InjectRepository(ClientEntity) private clientsRepo: typeof ClientEntity,
   ) {}
 
-  async transform(input: CreateClientInput): Promise<boolean> {
+  async transform(input: CreateClientInput): Promise<CreateClientInput> {
     const exist = await this.clientsRepo.existsBy({ email: input.email });
     if (exist) {
       throw new BadRequestException('Такой email уже занят');
     }
-    return true;
+    return input;
   }
 }

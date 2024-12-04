@@ -3,17 +3,15 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsEmail,
   IsEnum,
-  IsNumber,
+  IsNumber, IsPositive,
   IsString,
-  Min,
-  MinLength,
-} from 'class-validator';
-import { MoreThan } from "typeorm";
+  MinLength
+} from "class-validator";
 
 export class CreateClientInput {
   @ApiProperty({ description: 'Счет клиента' })
   @IsNumber()
-  @MoreThan(0)
+  @IsPositive()
   amount: number;
 
   @ApiProperty({ description: 'Email клиента' })
