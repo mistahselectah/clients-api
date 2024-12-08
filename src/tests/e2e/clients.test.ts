@@ -175,7 +175,6 @@ describe("Clients API", () => {
       .send({ name })
       .auth(userToken, { type: 'bearer' })
       .expect(403);
-    await clientsService.deleteClient(client2Id);
   });
 
   it(`should delete client`, async () => {
@@ -186,6 +185,7 @@ describe("Clients API", () => {
   });
 
   afterAll(async () => {
+    await clientsService.deleteClient(client2Id);
     await app.close();
   });
 });
