@@ -156,12 +156,11 @@ describe("Clients API", () => {
   });
 
   it(`should update client behalf of owner`, async () => {
-    const loginResponse = await login(client1.email, client1.password);
     const name = 'updated name';
     return request(httpServer)
       .put(`/api/clients/${client1Id}`)
       .send({ name })
-      .auth(loginResponse.token, { type: 'bearer' })
+      .auth(userToken, { type: 'bearer' })
       .expect(200)
       .then((response) => {
         expect(response.body).toBeDefined();
@@ -170,12 +169,11 @@ describe("Clients API", () => {
   });
 
   it(`should not update client behalf of not owner`, async () => {
-    const loginResponse = await login(client1.email, client1.password);
     const name = 'updated name';
     await request(httpServer)
       .put(`/api/clients/${client2Id}`)
       .send({ name })
-      .auth(loginResponse.token, { type: 'bearer' })
+      .auth(userToken, { type: 'bearer' })
       .expect(403);
     await clientsService.deleteClient(client2Id);
   });
