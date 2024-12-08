@@ -27,7 +27,8 @@ const db: TypeOrmModuleOptions & PostgresConnectionOptions = {
   username: get('POSTGRES_USER').required().asString(),
   password: get('POSTGRES_PASSWORD').required().asString(),
   database: get('POSTGRES_DB').required().asString(),
-  entities: [ClientEntity]
+  entities: [ClientEntity],
+  // logging: true
 };
 
 export default (): IConfig => ({
